@@ -1,0 +1,109 @@
+/* FILE CSS RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 16px;
+    line-height: 1;
+    background-color: rgb(161, 161, 198);
+}
+
+.game-container {
+    width: 484px;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+.score {
+    font-size: 32px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.game-board {
+    position: relative;
+    border: 1px solid black;
+}
+
+.grid {
+    height: 480px;
+    width: 480px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.cella {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
+.cella-dark {
+    background-color: blueviolet;
+}
+
+.cella:hover,
+.cella-clicked {
+    background-color: rgb(234, 0, 255);
+}
+
+.cella-bomb {
+    background-color: orangered;
+    background-image: url('images/bomb.png');
+    background-size: contain;
+}
+
+.cella-clicked,
+.cella-bomb {
+    cursor: not-allowed;
+}
+
+.end-game-screen {
+    position: absolute;
+    background-color: rgba(190, 155, 190, 0.707);
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    padding: 4px 20px 8px 20px;
+    cursor: pointer;
+}
+
+.win {
+    background-color: rgb(148, 202, 148);
+}
+
+.end-game-text {
+    font-size: 48px;
+    line-height: 1.2;
+    font-family: 'Press Start 2P', cursive;
+    margin-bottom: 16px;
+}
+
+button {
+    border: 2px solid rgb(0, 23, 50);
+    font-size: 24px;
+    text-transform: uppercase;
+    padding: 4px 20px 8px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(148, 88, 194);
+}
+
+.hidden {
+    display: none
+}
