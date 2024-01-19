@@ -1,98 +1,165 @@
-/* -----------------
-FASE PRELIMINARE DEL GIOCO
---------------------*/
-// Recupero degli elementi di interesse:
-
-const scoreCounter = document.querySelector(".score-counter");
 const grid = document.querySelector(".grid");
-const endGameScreen = document.querySelector(".end-game-screen");
-const endGameText = document.querySelector(".end-game-text");
-const playAgainButton = document.querySelector("button");
+const StackButton = document.querySelector(".stack");
+const scoreCounter = document.querySelector(".score-counter");
 
-// Informazioni utili alla logica di gioco:
-const totalCells = 100;
-const totalBombs = 16;
-const maxScore = totalCells - totalBombs;
-const bombsList = [];
+const endGameScreen = document.querySelector('.end-game-screen');
+const endGameText = document.querySelector('.end-game-text');
+const playAgainButton = document.querySelector('.play-again')
+
+const gridMatrix = [
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 0, 0, 0],
+]
+//console.table(gridMatrix);
+
+let currentRowIndex = gridMatrix.length - 1;
+let barDirection = 'right';
+let barSize = 3;
+let time;
+let isGameOver = false;
 let score = 0;
 
-// Per generare le bombe in modo casuale:
-while (bombsList.length < totalBombs) {
-    const number = Math.floor(Math.random() * totalCells) + 1;
-    if (!bombsList.includes(number)) bombsList.push(number);
+//FUNZIONE PER DRAW:
+function draw() {
+    grid.innerHTML = '';
+
+    gridMatrix.forEach(function (rowContent, rowIndex) {
+        rowContent.forEach(function (cellContent, cellIndex) {
+            const cell = document.createElement('div');
+            cell.classList.add('cella');
+            //cell.innerText = cellIndex;
+
+            const isRowEven = rowIndex % 2 === 0;
+            const isCellEven = cellIndex % 2 === 0;
+            if ((isRowEven && isCellEven) || (!isRowEven && !isCellEven)) {
+                cell.classList.add('cella-dark');
+            }
+            if (cellContent === 1) {
+                cell.classList.add('cella-bar');
+            }
+
+            grid.appendChild(cell);
+        })
+    })
 }
-console.log(bombsList);
 
-// GRIGLIA E LOGICA DI GIOCO  
+function moveRight(row) {
+    row.pop();
+    row.unshift(0);
+}
 
-let isCellEven = false;
-let isRowEven = false;
+function moveLeft(row) {
+    row.shift();
+    row.push(0);
+}
 
-for (let i = 1; i <= totalCells; i++) {
-    // Creo un elemento e li do classe cella:
-    const cella = document.createElement('div');
-    cella.classList.add('cella');
-    //cella.innerText = i;
 
-    isCellEven = i % 2 === 0;
+function isRightEdge(row) {
+    const lastElement = row[row.length - 1];
+    return lastElement === 1;
+}
+function isLeftEdge(row) {
+    const firstElement = row[0];
+    return firstElement === 1;
+}
 
-    if (isRowEven && isCellEven) cella.classList.add('cella-dark');
-    else if (!isRowEven && !isCellEven) cella.classList.add('cella-dark');
+function moveBar() {
+    const currentRow = gridMatrix[currentRowIndex];
 
-    //Quando fine della riga:
-    if (i % 10 === 0) isRowEven = !isRowEven;
-
-    // CLICK DELLA CELLA:
-    cella.addEventListener('click', function () {
-        // console.log('cliccata la cella', i)
-        // Controllo cella cliccata:
-        if (cella.classList.contains('cella-clicked')) return;
-
-        if (bombsList.includes(i)) {
-            cella.classList.add('cella-bomb');
-            endGame(false);
-        } else {
-            cella.classList.add('cella-clicked');
-            updateScore();
+    if (barDirection === 'right') {
+        moveRight(currentRow);
+        if (isRightEdge(currentRow)) {
+            barDirection = 'left';
         }
-    });
+    } else if (barDirection === 'left') {
+        moveLeft(currentRow);
+        if (isLeftEdge(currentRow)) {
+            barDirection = 'right';
+        }
+    }
+}
+draw();
 
-    // Metto in griglia:
-    grid.appendChild(cella);
+
+function checkLose() {
+    const currentRow = gridMatrix[currentRowIndex];
+    const preRow = gridMatrix[currentRowIndex + 1];
+
+    if (!preRow) return;
+
+    for (let i = 0; i < currentRow.length; i++) {
+        if (currentRow[i] === 1 && preRow[i] === 0) {
+            currentRow[i] = 0;
+            barSize--;
+        }
+    }
+    if (barSize === 0) {
+        isGameOver = true;
+        clearInterval(time);
+        //window.alert('you lose!');
+        endGame(false);
+    }
 }
 
-/* -------------------
-FUNZIONI DEL GIOCO
-----------------------*/
+function checkWin() {
+    if (currentRowIndex === 0) {
+        isGameOver = true;
+        clearInterval(time);
+        //window.alert('you win!');
+        endGame(true);
+    }
+}
+
+function OnStack() {
+    //check lose
+    checkLose();
+    //check win
+    checkWin();
+    // score
+    updateScore();
+
+    if (isGameOver) return;
+
+    // change row
+    currentRowIndex = currentRowIndex - 1;
+    barDirection = 'right';
+    for (let i = 0; i < barSize; i++) {
+        gridMatrix[currentRowIndex][i] = 1;
+    }
+    //draw();
+}
+
 function updateScore() {
-    score++;
-    scoreCounter.innerText = String(score).padStart(5, 0);
-    if (score === maxScore) endGame(true);
+    //score++;
+    //scoreCounter.innerText = score.toString().padStart(5, '0');
+
+    //total score
+    const finalBlock = document.querySelectorAll('.cella-bar');
+    scoreCounter.innerText = finalBlock.length.toString().padStart(5, '0');
 }
+
 function endGame(isVictory) {
-    if (isVictory === true) {
+    if (isVictory) {
+        endGameText.innerHTML = "You Win!";
         endGameScreen.classList.add('win');
-        endGameText.innerText = "YOU WIN";
-    } else {
-        revealAllBombs();
     }
     endGameScreen.classList.remove('hidden');
 }
 
-//BONUS
-function revealAllBombs() {
-    const cella = document.querySelectorAll('.cella');
-    for (let i = 1; i <= cella.length; i++) {
-        if (bombsList.includes(i)) {
-            const cellToReveal = cella[i - 1];
-            cellToReveal.classList.add('cella-bomb');
-        }
-    }
+function main() {
+    moveBar();
+    draw();
 }
 
-
-// CLICK DEL TRY AGAIN:
+StackButton.addEventListener('click', OnStack);
 playAgainButton.addEventListener('click', function () {
     location.reload();
-})
+});
 
+time = setInterval(main, 600);
