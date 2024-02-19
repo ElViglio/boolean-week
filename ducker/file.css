@@ -1,0 +1,144 @@
+/* FILE CSS RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding: 16px;
+    line-height: 1;
+    background-color: rgb(161, 161, 198);
+}
+
+.game-container {
+    width: 445px;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+.score {
+    font-size: 32px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.game-board {
+    position: relative;
+    border: 7px solid black;
+    background-size: contain;
+}
+
+.grid {
+    height: calc(48px * 9);
+    width: calc(48px * 9);
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    background-size: contain;
+}
+
+.cell {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    /* border: 0.5px dashed rgb(0, 0, 0);*/
+    background-size: contain;
+}
+
+.river {
+    background-color: lightblue;
+}
+
+.road {
+    border-top: 1px dashed white;
+    border-bottom: 1px dashed white;
+    background-color: gray;
+}
+
+.wood {
+    background-image: url(images/wood.png);
+}
+
+.car {
+    background-image: url(images/car.png);
+}
+
+.bus {
+    background-image: url(images/bus.png);
+}
+
+.duck {
+    background-image: url(images/duck-walk.gif);
+}
+
+.duck-arrived {
+    background-image: url(images/duck-standing.png);
+}
+
+.duck-drowned {
+    background-image: url(images/duck-drowned.png);
+}
+
+.duck-hit {
+    background-image: url(images/duck-hit.png);
+}
+
+.river.duck {
+    background-image: url(images/duck-walk.gif ), url(images/wood.png);
+}
+
+/*.cell-dark {
+    background-color: rgb(167, 145, 188);
+}*/
+
+/*.cell:hover,
+.cell-clicked {
+    background-color: rgb(234, 0, 255);
+}*/
+
+.end-game-screen {
+    position: absolute;
+    background-color: rgba(190, 155, 190, 0.707);
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    padding: 4px 20px 8px 20px;
+    cursor: pointer;
+}
+
+.win {
+    background-color: rgba(179, 235, 179, 0.903);
+}
+
+.end-game-text {
+    font-size: 48px;
+    line-height: 1.2;
+    font-family: 'Press Start 2P', cursive;
+    margin-bottom: 16px;
+}
+
+button {
+    border: 2px solid rgb(0, 23, 50);
+    font-size: 24px;
+    text-transform: uppercase;
+    padding: 4px 20px 8px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: rgb(148, 88, 194);
+}
+
+.hidden {
+    display: none
+}
